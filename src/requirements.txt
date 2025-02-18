@@ -4,5 +4,6 @@ idna
 pillow
 requests
 urllib3
+numpy
 tqdm
 pyinstaller

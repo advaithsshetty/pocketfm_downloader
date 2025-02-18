@@ -14,3 +14,4 @@ version_info.txt
 *.mp3
 src/config.ini
 *.ico
+to_remove.txt

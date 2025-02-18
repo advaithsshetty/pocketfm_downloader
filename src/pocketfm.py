@@ -40,7 +40,6 @@ def headers(access_token=None):
         'accept-language':'en-RO,en;q=0.9,zh-RO;q=0.8,zh;q=0.7,en-GB;q=0.6,en-US;q=0.5',
         'app-client':'consumer-web',
         'app-version':'180',
-        'auth-token':'web-auth',
         'cache-control':'no-cache',
         'device-id':'mobile-web',
         'dnt':'1',
@@ -58,7 +57,9 @@ def headers(access_token=None):
         'sec-fetch-site':'same-site',
         'user-agent':'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36'
     }
-    if access_token:
+    if access_token==None:
+        headers['auth-token'] = 'web-auth'
+    else:    
         headers['access-token'] = access_token
     return headers
 
@@ -72,6 +73,7 @@ def fetch_pocketfm_data(show_id, pattern='*', headers=headers(access_token), bas
     end_ptr = ptr_2
     curr_ptr_prev = ''
     all_stories = []
+    print(f"{BLUE}Fetching data for show: {get_show_name(show_id)}")
     while True:
         if curr_ptr > end_ptr:
             break
@@ -80,7 +82,6 @@ def fetch_pocketfm_data(show_id, pattern='*', headers=headers(access_token), bas
             'curr_ptr': curr_ptr,
             'info_level': 'max'
         }
-        print(f"{BLUE}Fetching data for show: {get_show_name(show_id)}, Pointing: {curr_ptr}...{RESET}")
         try:
             response = session.get(base_url, headers=headers, params=params)
             if response.status_code == 200:

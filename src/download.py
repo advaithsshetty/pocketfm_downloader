@@ -26,32 +26,33 @@ def download_file_with_progress(url, filepath):
             file.write(data)
             progress_bar.update(len(data))
 
-def download_episodes(json_filename, pattern, download_folder, show_id):
+def download_episodes(json_filename, pattern, download_folder, show_id,meta=False):
     try:
-        ffmpeg_path = getcwd()
-        if check_ffmpeg_installed(ffmpeg_path):
-            meta = True
-            image_name = f"{show_id}.webp"
-            image_url = get_show_image_url(show_id)
-            if not image_url:
-                print(f"{RED}Could not fetch image for show_id: {show_id}{RESET}")
-                return
-            try:
-                image_data = get(image_url).content
-                image_path = path.join(download_folder, image_name)
-                with open(image_path, 'wb') as img_file:
-                    img_file.write(image_data)
-                jpeg_path = image_path.replace(".webp", ".jpeg")
-                convert_webp_to_jpeg(image_path, jpeg_path)
-                remove(image_path)
-                author = get_author_name(show_id)
-                album_name = get_show_name(show_id)
-            except RequestException as e:
-                print(f"{RED}Failed to download image: {e}{RESET}")
-                return
-        else:
-            meta = False
-            print(f"{YELLOW}FFmpeg not found. Metadata embedding is not possible.{RESET}")
+        if meta:
+            ffmpeg_path = getcwd()
+            if check_ffmpeg_installed(ffmpeg_path):
+                meta = True
+                image_name = f"{show_id}.webp"
+                image_url = get_show_image_url(show_id)
+                if not image_url:
+                    print(f"{RED}Could not fetch image for show_id: {show_id}{RESET}")
+                    return
+                try:
+                    image_data = get(image_url).content
+                    image_path = path.join(download_folder, image_name)
+                    with open(image_path, 'wb') as img_file:
+                        img_file.write(image_data)
+                    jpeg_path = image_path.replace(".webp", ".jpeg")
+                    convert_webp_to_jpeg(image_path, jpeg_path)
+                    remove(image_path)
+                    author = get_author_name(show_id)
+                    album_name = get_show_name(show_id)
+                except RequestException as e:
+                    print(f"{RED}Failed to download image: {e}{RESET}")
+                    return
+            else:
+                meta = False
+                print(f"{YELLOW}FFmpeg not found. Metadata embedding is not possible.{RESET}")
         with open(json_filename, 'r', encoding='utf-8') as f:
             stories = load(f)
         download_range = determine_download_range(pattern, len(stories))
@@ -79,7 +80,7 @@ def download_episodes(json_filename, pattern, download_folder, show_id):
                 else:
                     print(f"{YELLOW}Looks like you haven't unlocked '{story_title}'. Skipping...{RESET}")
             else:
-                print(f"{YELLOW}Story index {i} out of range. Skipping...{RESET}")
+                print(f"{YELLOW}Story index {i+1} out of range. Skipping...{RESET}")
         if meta:
             remove(jpeg_path)
         print(f"{CYAN}Download complete.{RESET}")

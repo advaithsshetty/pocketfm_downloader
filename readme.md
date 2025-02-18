@@ -82,8 +82,7 @@ Alternatively, download the precompiled executable from the [Releases](https://g
 ### How to get access token
 
 1. Open <a href="https://pocketfm.com/">PocketFM web</a> and Login
-2. Open developer tools and navigate to networks section
-3. Filter out **log** and in the headers, you will find your access token.
+2. Using the Cookie-Editor extension([Chrome](https://chromewebstore.google.com/detail/cookie-editor/hlkenndednhfkekhgcdicdfddnkalmdm),[Firefox](https://addons.mozilla.org/en-US/firefox/addon/cookie-editor/)), find the cookie named **access-token**.
 <p align="center">
   <img src="./images/access-token.png" alt="Access Token" />
 </p>
@@ -114,6 +113,7 @@ Downloads all episodes from the specified show.
   - `n*m`: Download episodes between `n` and `m`.
   - `n`: Download a specific episode.
 - `-h, --help`: Display the help message.
+- `-m, --metadata`: Add metadata to the downloaded episodes.
 
 ### Examples
 
@@ -137,6 +137,11 @@ Downloads all episodes from the specified show.
     pocketfm-dl "https://pocketfm.com/show_id" -p "3"
     ```
 
+5. **Download episodes with metadata**:
+    ```bash
+    pocketfm-dl "https://pocketfm.com/show_id" -m
+    ```
+    
 ## How It Works
 
 1. **Fetching Data**: The tool fetches the show's data from PocketFM using the provided URL.
